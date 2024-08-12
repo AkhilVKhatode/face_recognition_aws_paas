@@ -10,7 +10,6 @@ In this project, we developed a serverless cloud application using AWS Lambda an
 
 ### Input Bucket
 - Stores videos uploaded by clients.
-- Naming convention: `id-input` (e.g., `12345678910-input`).
 - Contains only `.mp4` video files.
 - Triggers the `video-splitting` Lambda function upon new video upload.
 
@@ -18,11 +17,10 @@ In this project, we developed a serverless cloud application using AWS Lambda an
 - Lambda function named `video-splitting`.
 - Triggered by new video uploads in the input bucket.
 - Splits videos into Group-of-Pictures (GoP) using `ffmpeg`.
-- Stores GoP in a corresponding folder in the `id-stage-1` bucket.
+- Stores GoP in a corresponding folder in the `your-stage-bucket` bucket.
 
 ### Stage-1 Bucket
 - Stores results of the `video-splitting` function.
-- Naming convention: `id-stage-1`.
 - Contains folders named after the input videos without extensions, each holding frame images.
 
 ## Files and Directory Structure
@@ -53,8 +51,8 @@ In this project, we developed a serverless cloud application using AWS Lambda an
 
 ### Steps
 1. **Create S3 Buckets**:
-   - Input bucket: `id-input`
-   - Stage-1 bucket: `id-stage-1`
+   - Input bucket: `your-input-bucket`
+   - Stage-1 bucket: `your-stage-bucket`
 
 2. **Deploy Lambda Function**:
    - Build Docker image:
@@ -72,27 +70,3 @@ In this project, we developed a serverless cloud application using AWS Lambda an
 3. **Configure S3 Trigger**:
    - Set up S3 event notification on the input bucket to trigger the `video-splitting` Lambda function on new object creation.
 
-### Testing
-- Use the provided workload generator to upload videos to the input bucket and verify that frames are correctly processed and stored in the stage-1 bucket.
-
-## IAM Permissions for Grading
-Create an IAM user with the following permissions and provide the access keys for grading:
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:Get*",
-        "s3:PutObject",
-        "s3:List*",
-        "lambda:GetFunction",
-        "cloudwatch:GetMetricData"
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-```
